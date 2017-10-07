@@ -84,6 +84,11 @@ li a.selectedclass{
 }
 
 
+.center{
+    text-align: center;
+}
+
+
 #tab4PanelBody{
     min-height: 800px;
     max-height:800px;

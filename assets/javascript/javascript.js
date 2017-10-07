@@ -543,7 +543,7 @@ function twitchData(data){
       var resultRow = $("<div class='row'>");
       var newRow = resultRow.attr('id','row'+panelNum)
       var channel = data["streams"][i]["channel"]["name"];
-      var channelPic = $('<img src=' + data["streams"][i].preview.medium + ' width="300" height="300">');
+      var channelPic = $('<div class="center"> <img src=' + data["streams"][i].preview.medium + ' width="320" height="240"></div>');
       channelPic.attr("id", "image");
       channelPic.attr("location", 'tab2' +'panelTab'+ panelNum)
       channelPic.attr("href","http://player.twitch.tv/?channel=" + channel )
@@ -664,7 +664,7 @@ function topVideos(){
         var newRow = resultRow.attr('id','row'+panelNum);
         var channel = data["streams"][i]["channel"]["name"]; //.streams["0"].preview.medium
         
-        var channelPic = $('<img src=' + data["streams"][i].preview.medium + ' width="300" height="300">');
+        var channelPic = $('<div class="center"> <img src=' + data["streams"][i].preview.medium + ' width="320" height="240"></div>');
         channelPic.attr("id", "image");
         //saving the image location as a location attribute to the image.
         channelPic.attr("location", 'tab2' +'panelTab'+ panelNum)
