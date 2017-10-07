@@ -15,16 +15,16 @@ var config = require('./assets/new_npm/config');
 var T = new Twit(config);
 
 app.get('/tweets', function(req, res){
-	
+
 	// console.log("request: ", req.url);
 	// console.log("response: " + res);
-	
-	T.get('search/tweets', { q: req.query.search, platforms: req.platforms, count: 50, dataType: "json"}, 
+
+	T.get('search/tweets', { q: req.query.search, platforms: req.platforms, count: 50, dataType: "json"},
 		function(err, data, response) {
 	    console.log(data);
 	  	res.json(data);
 	 });
-	
+
 })
 //==========================================
 
@@ -35,27 +35,34 @@ var dotenv = require('dotenv').config();
 
 require('dotenv/config');
 
+// var client = amazon.createClient({
+//   awsTag: process.env.AWS_TAG,
+//   awsId: process.env.AWS_ID,
+//   awsSecret: process.env.AWS_SECRET
+// });
 
 var client = amazon.createClient({
-  awsTag: process.env.AWS_TAG,
-  awsId: process.env.AWS_ID,
-  awsSecret: process.env.AWS_SECRET
+  awsId: "AKIAIULBFZTKRXLDWF3A",
+  awsSecret: "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",
+	awsTag: "beatrizmribei-20"
 });
+
 console.log(process.env.AWS_TAG)
 app.get('/amazon', function(req, res){
 	client.itemSearch({
-	  // director: 'Quentin Tarantino',
-	  // actor: 'Samuel L. Jackson',
-	  // searchIndex: 'DVD',
-	  // audienceRating: 'R',
+	   //director: 'Quentin Tarantino',
+	  //  actor: 'Samuel L. Jackson',
+	  //  searchIndex: 'DVD',
+	  //  audienceRating: 'R',
 	  keywords: req.query.search,
 	  responseGroup: 'ItemAttributes,Offers,Images'
 	}, function(err, results, response) {
 	  if (err) {
 	    console.log(err);
+			console.log(err.Message);
 	  } else {
-	    console.log(results);  // products (Array of Object) 
-	    console.log(response); // response (Array where the first element is an Object that contains Request, Item, etc.) 
+	    console.log(results);  // products (Array of Object)
+	    console.log(response); // response (Array where the first element is an Object that contains Request, Item, etc.)
 	  	res.json(results);
 	  }
 	});
@@ -64,13 +71,13 @@ app.get('/amazon', function(req, res){
 
 //=============igdb related =========================
 
-const igdb = require('igdb-api-node').default; 
+const igdb = require('igdb-api-node').default;
 var igdbAPIKey = 'ad750a15ddd755884be804b65c7e59a5'
 const clientIGDB = igdb(igdbAPIKey);
 
 
 app.get('/igdb', function(req, res){
-	
+
 	// console.log("Srivatsava request: ", req.query.search);
 	//console.log(req.baseUrl);
 	//console.log("response: " + res);

@@ -1,10 +1,10 @@
 /*
  * @summary: This javascript file covers the functionality that creates User interface to display game related videos, news and tweets based on the query.
- *  
+ *
  *
  * @author :Srivastava Cheemakurthi,Brad Collins, Beatriz Ribeiro
  * @version: 1.0
- * 
+ *
  */
 
 //firebase configuration.
@@ -16,18 +16,18 @@ var config = {
     storageBucket: "",
     messagingSenderId: "514530584313"
   };
-    
+
   // firebase initialization section
 firebase.initializeApp(config);
 var database = firebase.database();
 var usrCommentRef = database.ref('/game/comments');
 
 
-// Generic Confirm dialog func 
+// Generic Confirm dialog func
 function signUpFrm(heading, cancelButtonTxt, okButtonTxt) {
 
-  var confirmModal = 
-    $('<div class="modal fade">' +        
+  var confirmModal =
+    $('<div class="modal fade">' +
       '<div class="modal-dialog" role="document">' +
         '<div class="modal-content">' +
           '<div class="modal-header">' +
@@ -59,9 +59,9 @@ function signUpFrm(heading, cancelButtonTxt, okButtonTxt) {
      //  confirmModal.modal('hide');
      // }));
       confirmModal.modal('show');
-      confirmModal.modal('hide');     
-  };  
-// END Generic Confirm func 
+      confirmModal.modal('hide');
+  };
+// END Generic Confirm func
 
 
 
@@ -75,7 +75,7 @@ function createPanel(num, colsize, appendLocation){
   pfooter.attr('id', 'pfooter'+ num);
   pdefault.append(pbody);
   pdefault.append(pfooter);
-  
+
   var paneldiv = $('<div class=paneldiv>');
   paneldiv.addClass(colsize);
   // append the panel Default to the container-fluid
@@ -98,7 +98,7 @@ $(document).ready(function(){
   $('#tab1').show();
   commentTable()
   topNews();
- 
+
 
 });
 
@@ -118,14 +118,14 @@ function layout(){
     // create the tab
     $('<li><a href="#tab'+ nextTab +'" data-toggle="tab">'+tabNames[i]+'</a></li>').appendTo(navs);
     // create the tab content
-    $('<div class="tab-pane" id="tab'+ nextTab +'">' +  '</div>').appendTo(tabcontent); //tabNames[i] + 
+    $('<div class="tab-pane" id="tab'+ nextTab +'">' +  '</div>').appendTo(tabcontent); //tabNames[i] +
     navTabDiv.append(navs);
     displayDiv.append(navTabDiv);
     displayDiv.append(tabcontent);
 
     $('.container-fluid').append(displayDiv);
   }
-  
+
 
 }
 //When a tab is selected displaying the content.
@@ -211,7 +211,7 @@ $(document).on("click",function(){
     $('#tab4').hide();
   }else{
     console.log('No active elements');
-  } 
+  }
 
 })
 // function to search data from IGDB platforms
@@ -245,7 +245,7 @@ $(document).on("click", "#gsearchBtn",function(event) {
   // connecing to IGN to get articles based on the Query.
   if (source==="ign"){
     var ignApiKEY = "457859b89daf48f1bab20c292e4ba57d"
-    var queryURL = "https://newsapi.org/v1/articles?source=ign&category=gaming&apiKey="+ ignApiKEY + "&sortBy=latest" //+ '&title=' + gameQueried 
+    var queryURL = "https://newsapi.org/v1/articles?source=ign&category=gaming&apiKey="+ ignApiKEY + "&sortBy=latest" //+ '&title=' + gameQueried
     $.ajax({
         url: queryURL,
         method: 'GET'
@@ -296,12 +296,21 @@ $(document).on("click", "#gsearchBtn",function(event) {
           twitterResults(twitterData);
         }
       });
+  }else if (source==="amazon"){
+    $.ajax({
+        url: '/amazon',
+        type: 'GET',
+        data:{search: gameQueried},
+        success: function(amazonData) {
+          amazonResults(amazonData);
+        }
+      });
   }
   else{
     console.log('search not working');
   }
    // end of the search button click function
-}); 
+});
 
 
 
@@ -320,7 +329,7 @@ function gamer(data) {
     createPanel(panelNum, 'col-sm-4', 'tab3');
     var newRow = resultRow.attr('id','row'+panelNum);
     // console.log(newRow)
-  
+
       resourceType = results[i].resource_type;
     if (resourceType === "game") {
       var name = $("<p>").text("Name: " + results[i].name);
@@ -358,7 +367,7 @@ $(document).on("click","#pCommentBtn", function(event) {
   $(".modal").modal('show');
   console.log($(this))
   console.log($(this)["0"].parentElement.parentElement.firstChild.children[4].text)
-  
+
 });
 
 $(document).on("click","#saveBtn", function(event) {
@@ -370,12 +379,12 @@ $(document).on("click","#saveBtn", function(event) {
    saveComment();
    displayComments();
   $(".modal").modal('hide');
-  
+
 });
 
 function saveComment(){
   // firebase comment database access configuration
- 
+
 
   var cName = $("#name-input").val().trim();
   var cEmail = $("#email-input").val().trim();
@@ -388,7 +397,7 @@ function saveComment(){
       comments: cMsg,
       time: cTime
       //get the game information and upate here.
-      //game: 
+      //game:
   };
 
   // console.log(newComments.name);
@@ -437,7 +446,7 @@ function igdbResults(data){
     catch(err){
       console.log(err);
     }
-    var gameUrl = $('<a href=' + Url +' target="_blank">'+ "Visit GameURL" +'</a>' );  
+    var gameUrl = $('<a href=' + Url +' target="_blank">'+ "Visit GameURL" +'</a>' );
     $('#tab3' +'panelTab'+ panelNum).append($("<p>").text("Name: " + name));
     $('#tab3' +'panelTab'+ panelNum).append($("<p>").text("Summary: " + summary));
     $('#tab3' +'panelTab'+ panelNum).append(gameUrl);
@@ -479,7 +488,7 @@ function platformResults(data){
     catch(err){
       console.log(err);
     }
-    var gameUrl = $('<a href=' + Url +' target="_blank">'+ "Visit GameURL" +'</a>' );  
+    var gameUrl = $('<a href=' + Url +' target="_blank">'+ "Visit GameURL" +'</a>' );
     $('#tab3' +'panelTab'+ panelNum).append(id);
     $('#tab3' +'panelTab'+ panelNum).append($("<p>").text("Name: " + name));
     $('#tab3' +'panelTab'+ panelNum).append($("<p>").text("Summary: " + summary));
@@ -521,12 +530,12 @@ function twitterResults(data){
     catch(err){
       console.log(err);
     }
-    // var gameUrl = $('<a href=' + Url +' target="_blank">'+ "Visit GameURL" +'</a>' );  
+    // var gameUrl = $('<a href=' + Url +' target="_blank">'+ "Visit GameURL" +'</a>' );
     $('#tab3' +'panelTab'+ panelNum).append(id);
     $('#tab3' +'panelTab'+ panelNum).append($("<p>").text("Name: " + name));
     $('#tab3' +'panelTab'+ panelNum).append($("<p>").text("Summary: " + summary));
     $('#tab3' +'panelTab'+ panelNum).append(Url);
-    
+
 
   }
   $('#tab3').show();
@@ -556,6 +565,30 @@ function twitchData(data){
     $('#tab2').show();
     $('#tab1').hide();
     $('#tab3').hide();
+    $('#tab4').hide();
+}
+
+function amazonResults(data){
+    $('#tab3').empty();
+    for (var i=0; i< data.length; i++){
+      var panelNum = i + 1;
+      createPanel(panelNum, 'col-sm-4', 'tab3');
+      var resultRow = $("<div class='row'>");
+      var newRow = resultRow.attr('id','row'+panelNum)
+
+      console.log(data[i]["MediumImage"][0]["URL"])
+      var channelPic = $('<div class="center"> <img src=' + data[i]["MediumImage"][0]["URL"] + ' width="'+ data[i]["MediumImage"][0]["Width"][0]["_"] +'" height="'+data[i]["MediumImage"][0]["Height"][0]["_"]+'"></div>');
+      channelPic.attr("id", "image");
+      channelPic.attr("location", 'tab3' +'panelTab'+ panelNum)
+      var videoDiv = $('<div class=videos>');
+      videoDiv.append(channelPic);
+      $('#tab3' +'panelTab'+ panelNum).append(videoDiv);
+      $('#tab3' +'panelTab'+ panelNum).append($("<p>").text("Product Group: " + data[i]["ItemAttributes"][0]["ProductGroup"][0]));
+      $('#tab3' +'panelTab'+ panelNum).append($("<p>").text("ListPrice: " + data[i]["ItemAttributes"][0]["ListPrice"][0]["FormattedPrice"][0] + " " + data[i]["ItemAttributes"][0]["ListPrice"][0]["CurrencyCode"][0]));
+    }
+    $('#tab3').show();
+    $('#tab1').hide();
+    $('#tab2').hide();
     $('#tab4').hide();
 }
 
@@ -663,7 +696,7 @@ function topVideos(){
         var resultRow = $("<div class='row'>");
         var newRow = resultRow.attr('id','row'+panelNum);
         var channel = data["streams"][i]["channel"]["name"]; //.streams["0"].preview.medium
-        
+
         var channelPic = $('<div class="center"> <img src=' + data["streams"][i].preview.medium + ' width="320" height="240"></div>');
         channelPic.attr("id", "image");
         //saving the image location as a location attribute to the image.
@@ -708,7 +741,7 @@ function amazonItemLookUP(tag){
 
 // table to display user comments from Firebase database.
 function commentTable(){
-  
+
   var pdefault = $('<div class="panel panel-default">')
   var pheader = $('<div class="panel-heading">')
   pheader.addClass("text-center");
@@ -750,8 +783,8 @@ function commentTable(){
 
 
 function displayComments(snapshot){
-  
-  // usrCommentRef.on("child_added", function(snapshot) { 
+
+  // usrCommentRef.on("child_added", function(snapshot) {
     // firebase comment database access configuration
     var cName = snapshot.val().name;
     var cEmail = snapshot.val().email;
@@ -765,7 +798,7 @@ function displayComments(snapshot){
     // Add each user comment data into the table
     $("#comment-table > tbody").append("<tr><td>" + cName + "</td><td>" + cEmail + "</td><td>" +
     cComments + "</td><td>" + cTime  + "</td></td><td></tr>");
-  
+
 }
 
 // New comment added
