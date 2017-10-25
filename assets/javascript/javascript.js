@@ -1,3 +1,6 @@
+// This is quite the lengthy JS file - would be a bit easier to comprehend and maintain
+// if you split it up into smaller functional chunks.
+
 /*
  * @summary: This javascript file covers the functionality that creates User interface to display game related videos, news and tweets based on the query.
  *
@@ -26,6 +29,10 @@ var usrCommentRef = database.ref('/game/comments');
 // Generic Confirm dialog func
 function signUpFrm(heading, cancelButtonTxt, okButtonTxt) {
 
+  // While I applaud your effort to dynamically generate large chunks of your html,
+  // it might be a bit easier on you to just write more html and dynamically manipulate
+  // it with JS. Espcially since you only call this function once so the dynamic variable
+  // insertion doesn't end up serving much of a purpose.
   var confirmModal =
     $('<div class="modal fade">' +
       '<div class="modal-dialog" role="document">' +
@@ -43,6 +50,7 @@ function signUpFrm(heading, cancelButtonTxt, okButtonTxt) {
                     '<input class="form-control" id="email-input" type="email"/>' +
                     '<label for="comments-input">Your Comments:</label>' +
                     '<textarea class="form-control" id="comments-input" rows="5"></textarea>' +
+                    // Best to remove commentd out code
                     // '<button class="btn btn-primary" id="commentBtn" type="submit" style="margin-right: 90px;" ;">Post your Comment</button>' +
                   '</div>' +
               '</form>' +
@@ -58,6 +66,7 @@ function signUpFrm(heading, cancelButtonTxt, okButtonTxt) {
     // //   callback();
      //  confirmModal.modal('hide');
      // }));
+     // these show/hide calls cause there to be a flickering modal on page load.
       confirmModal.modal('show');
       confirmModal.modal('hide');
   };
@@ -134,6 +143,9 @@ $('#tabs a').click(function (e) {
   $(this).tab('show')
 })
 
+// By placing one global click handler on the document and then conditionally figuring
+// out what you need to show and hide, you somewhat confuse what this handler's purpose
+// is. Also, the conditionals are very repetitive so I'd look at a way to DRY them up.
 $(document).on("click",function(){
   var activeElement = $(this)[0].activeElement;
   if (activeElement.text=== 'Top News') {
@@ -243,6 +255,9 @@ $(document).on("click", "#gsearchBtn",function(event) {
   var gameQueried = $('#gsearch-input').val();
   var source = $("#selSource option:selected").val();
   // connecing to IGN to get articles based on the Query.
+  // These conditionals are also a bit repetitive - would maybe be a good idea to conditionally
+  // determine just the url, headers, data, and success properties and then
+  // only have one ajax call. 
   if (source==="ign"){
     var ignApiKEY = "457859b89daf48f1bab20c292e4ba57d"
     var queryURL = "https://newsapi.org/v1/articles?source=ign&category=gaming&apiKey="+ ignApiKEY + "&sortBy=latest" //+ '&title=' + gameQueried
@@ -362,11 +377,11 @@ function gamer(data) {
 //  Writing the comment information into the database.
 $(document).on("click","#pCommentBtn", function(event) {
 // preventing auto refresh when button clicked.
-  console.log($(this))
+  // console.log($(this))
   event.preventDefault();
   $(".modal").modal('show');
-  console.log($(this))
-  console.log($(this)["0"].parentElement.parentElement.firstChild.children[4].text)
+  // console.log($(this))
+  // console.log($(this)["0"].parentElement.parentElement.firstChild.children[4].text)
 
 });
 
@@ -374,7 +389,7 @@ $(document).on("click","#saveBtn", function(event) {
 // preventing auto refresh when button clicked.
   event.preventDefault();
   // $(".modal").modal('show');
-  console.log("saveBtn");
+  // console.log("saveBtn");
   //saving the comments to the firebase database.
    saveComment();
    displayComments();
@@ -458,12 +473,12 @@ function igdbResults(data){
 }
 
 function platformResults(data){
-  console.log(data);
-  console.log("Id: " + data.body["0"].id);
-  console.log("Name: " + data.body["0"].name);
-  console.log("summary: " + data.body["0"].summary);
-  console.log("Popularity: " + data.body["0"].popularity);
-  console.log("URL: " + data.body["0"].url);
+  // console.log(data);
+  // console.log("Id: " + data.body["0"].id);
+  // console.log("Name: " + data.body["0"].name);
+  // console.log("summary: " + data.body["0"].summary);
+  // console.log("Popularity: " + data.body["0"].popularity);
+  // console.log("URL: " + data.body["0"].url);
   $('#tab3').empty();
   var item = data.body;
   for (var i=0; i< item.length;i++){
@@ -478,7 +493,7 @@ function platformResults(data){
     var Url = item[i].url;
     try {
       var coverUrl = item[i].cover.url;
-      console.log(Url);
+      // console.log(Url);
       var imageUrl = $("<img class=img-responsive>");
       imageUrl.attr("src", coverUrl);
       var imgDiv = $('<div class=videos>');
@@ -486,7 +501,7 @@ function platformResults(data){
       $('#tab3' +'panelTab'+ panelNum).append(imgDiv);
     }
     catch(err){
-      console.log(err);
+      // console.log(err);
     }
     var gameUrl = $('<a href=' + Url +' target="_blank">'+ "Visit GameURL" +'</a>' );
     $('#tab3' +'panelTab'+ panelNum).append(id);
@@ -501,12 +516,12 @@ function platformResults(data){
 }
 
 function twitterResults(data){
-  console.log(data);
-  console.log("Id: " + data.statuses["0"].id);
-  console.log("Name: " + data.statuses["0"].name);
-  console.log("summary: " + data.statuses["0"].summary);
-  console.log("text: " + data.statuses["0"].text);
-  console.log("URL: " + data.statuses["0"].source);
+  // console.log(data);
+  // console.log("Id: " + data.statuses["0"].id);
+  // console.log("Name: " + data.statuses["0"].name);
+  // console.log("summary: " + data.statuses["0"].summary);
+  // console.log("text: " + data.statuses["0"].text);
+  // console.log("URL: " + data.statuses["0"].source);
   $('#tab3').empty();
   var item = data.statuses;
   for (var i=0; i< item.length;i++){
@@ -576,7 +591,7 @@ function amazonResults(data){
       var resultRow = $("<div class='row'>");
       var newRow = resultRow.attr('id','row'+panelNum)
 
-      console.log(data[i]["MediumImage"][0]["URL"])
+      // console.log(data[i]["MediumImage"][0]["URL"])
       var channelPic = $('<div class="center"> <img src=' + data[i]["MediumImage"][0]["URL"] + ' width="'+ data[i]["MediumImage"][0]["Width"][0]["_"] +'" height="'+data[i]["MediumImage"][0]["Height"][0]["_"]+'"></div>');
       channelPic.attr("id", "image");
       channelPic.attr("location", 'tab3' +'panelTab'+ panelNum)
@@ -688,7 +703,7 @@ function topVideos(){
       'Accept': 'application/vnd.twitchtv.v5+json',
     },
     success :function(data){
-      console.log(data);
+      // console.log(data);
       $('#tab2').empty();
       for (var i=0; i< data["streams"].length;i++){
         var panelNum = i + 1;
@@ -719,7 +734,7 @@ $(document).on("click", "#image",function(event){
 
   var channel = $(this).attr("href");
   var videoLocation = $(this).attr("location");
-  console.log(videoLocation)
+  // console.log(videoLocation)
   var iFrame = $('<iframe data-cbsi-video width="300" height="300" src=' + channel + ' frameborder="0" allowfullscreen></iframe>');
   $('#' + videoLocation).prepend(iFrame);
   $(this).detach();

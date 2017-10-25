@@ -4,6 +4,10 @@ var app = express();
 
 app.get("/",function(req, res){res.sendFile(__dirname + "/assets/index.html")});
 app.use('/assets', express.static(path.join(__dirname + "/assets")));
+// It's convention to place the `app.listen` call at the bottom of your server file.
+// Also, you should make your port a variable that can be set by an environment variable
+// instead of just forcing it to always be 3000 - I think I had y'all do this for
+// the presentation.
 app.listen(3000, function(){
 console.log('listening on port:' + 3000);
 
@@ -77,7 +81,7 @@ const clientIGDB = igdb(igdbAPIKey);
 
 
 app.get('/igdb', function(req, res){
-
+	// Best to remove commented out code that you are no longer using
 	// console.log("Srivatsava request: ", req.query.search);
 	//console.log(req.baseUrl);
 	//console.log("response: " + res);
